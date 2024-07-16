@@ -1,0 +1,7 @@
+{
+  "name": "euris-frontend-dev-test-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

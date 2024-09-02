@@ -1,9 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { InfiniteScrollCustomEvent, IonContent, IonHeader, IonList, IonSkeletonText, IonTitle, IonToolbar, IonItem } from '@ionic/angular/standalone';
+import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
-import { ProductsService } from '../services/products.service';
+import { IStore } from '../models/store.model';
+import { ProductsService } from '../services/http/products.service';
+import { StoreService } from '../services/http/store.service';
 
 @Component({
   selector: 'app-home',
@@ -17,52 +19,86 @@ import { ProductsService } from '../services/products.service';
     IonContent,
     IonList,
     IonSkeletonText,
-    IonItem
+    IonItem,
+    IonAlert
   ],
 })
 export class HomePage {
 
   dummyProducts = new Array(5);
   products: IProduct[] = [];
-  isLoading = false;
+  storeName: string | null = null;
+  isProductsLoading = false;
+  isStoreLoading = false;
+  error: string | null = null;;
 
   private currentPage = 1;
   private productService = inject(ProductsService);
+  private storeService = inject(StoreService);
 
   constructor() {
     this.loadProducts();
+    this.loadStore();
   }
 
-  
+
 
   loadProducts(event?: InfiniteScrollCustomEvent) {
 
-    if(!event) {
-      this.isLoading = true;
+    if (!event) {
+      this.isProductsLoading = true;
     }
 
     this.productService.getProducts().pipe(
       delay(3000),
       finalize(() => {
-        this.isLoading = false;
+        this.isProductsLoading = false;
         if (event) {
           event.target.complete();
         }
       })
     ).subscribe({
       next: (products: IProductList) => {
-        this.isLoading = false;
+        this.isProductsLoading = false;
         this.products.push(...products.list);
 
-        if(event) {
+        if (event) {
           event.target.disabled = products.list.length < 10;
         }
 
         console.log(products);
       },
       error: error => {
-        this.isLoading = false;
-        console.log(error);
+        this.isProductsLoading = false;
+        this.error = error;
+      }
+    });
+  }
+
+  loadStore(event?: InfiniteScrollCustomEvent) {
+
+    if (!event) {
+      this.isStoreLoading = true;
+    }
+
+    this.storeService.getStore().pipe(
+      delay(3000),
+      finalize(() => {
+        this.isStoreLoading = false;
+        if (event) {
+          event.target.complete();
+        }
+      })
+    ).subscribe({
+      next: (store: IStore) => {
+        this.isStoreLoading = false;
+        this.storeName = store.name;
+
+        console.log(store);
+      },
+      error: error => {
+        this.isStoreLoading = false;
+        this.error = error;
       }
     });
   }

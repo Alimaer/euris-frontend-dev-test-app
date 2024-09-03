@@ -70,8 +70,6 @@ export class HomePage {
         if (event) {
           event.target.disabled = products.list.length < 10;
         }
-
-        console.log(products);
       },
       error: error => {
         this.isProductsLoading = false;
@@ -105,8 +103,6 @@ export class HomePage {
       next: (store: IStore) => {
         this.isStoreLoading = false;
         this.storeName = store.name;
-
-        console.log(store);
       },
       error: error => {
         this.isStoreLoading = false;

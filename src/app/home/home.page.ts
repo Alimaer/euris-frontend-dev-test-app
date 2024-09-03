@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/angular/standalone';
 import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
@@ -7,6 +7,7 @@ import { IStore } from '../models/store.model';
 import { ProductsCallerService } from '../services/http/products-caller.service';
 import { StoreCallerService } from '../services/http/store-caller.service';
 import { RouterModule } from '@angular/router';
+import { ProductsDataService } from '../services/products-data.service';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,8 @@ import { RouterModule } from '@angular/router';
     IonSkeletonText,
     IonItem,
     IonAlert,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
     RouterModule
   ],
 })
@@ -36,6 +39,7 @@ export class HomePage {
 
   private currentPage = 1;
   private productService = inject(ProductsCallerService);
+  private productDataService  = inject(ProductsDataService);
   private storeService = inject(StoreCallerService);
 
   constructor() {
@@ -61,6 +65,7 @@ export class HomePage {
       next: (products: IProductList) => {
         this.isProductsLoading = false;
         this.products.push(...products.list);
+        this.productDataService.addProducts(products.list);
 
         if (event) {
           event.target.disabled = products.list.length < 10;
@@ -75,8 +80,15 @@ export class HomePage {
     });
   }
 
-  loadStore(event?: InfiniteScrollCustomEvent) {
+  loadMoreProducts(event: InfiniteScrollCustomEvent) {
+    if(this.products.length < 10)
+      return;
 
+    this.currentPage++;
+    this.loadProducts(event);
+  }
+
+  loadStore(event?: InfiniteScrollCustomEvent) {
     if (!event) {
       this.isStoreLoading = true;
     }

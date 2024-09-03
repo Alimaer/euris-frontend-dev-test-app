@@ -18,7 +18,7 @@
   @if (isProductsLoading) {
     <ion-list>
       @for (i of dummyProducts; track i) {
-        <ion-item lines="none" class="ion-padding-bottom">
+        <ion-item lines="none">
           <ion-skeleton-text animated style="height: 40px"></ion-skeleton-text>
         </ion-item>
       }
@@ -29,9 +29,19 @@
 
   <ion-list>
     @for (product of products; track product.id) {
-      <ion-item lines="none" class="ion-padding-bottom">
+      <ion-item lines="none" button [routerLink]="['/product', product.id]">
         <p>{{product.data.title}}</p>
       </ion-item>
+    } @empty {
+      @if (!isProductsLoading) {
+        <ion-item lines="none">
+          <p>Nessun prodotto disponibile</p>
+        </ion-item>
+      }
     }
   </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadMoreProducts($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Caricamento prodotti..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

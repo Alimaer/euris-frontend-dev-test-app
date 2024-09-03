@@ -1,3 +1,49 @@
-<p>
-  product works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title> {{ data.title }} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label>Descrizione</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>{{ data.description }}</ion-label>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label>Prezzo</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>{{ data.price }}</ion-label>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label>
+          <ion-label>Categoria</ion-label>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>{{ data.category }}</ion-label>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label>Impiegato</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>{{ data.employee }}</ion-label>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-content>

@@ -2,20 +2,20 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BASE_URL, STORE_ID } from 'src/app/app.constants';
-import { IStore } from 'src/app/models/store.model';
+import { IProductList } from 'src/app/models/product-list.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StoreService {
+export class ProductsCallerService {
 
   private http = inject(HttpClient);
 
   constructor() { }
 
-  getStore(): Observable<IStore> {
-    return this.http.get<IStore>(
-      `${BASE_URL}/stores/${STORE_ID}`
+  getProducts(page = 1, number = 10): Observable<IProductList> {
+    return this.http.get<IProductList>(
+      `${BASE_URL}/stores/${STORE_ID}/products?page=${page}&elements=${number}`
     );
   }
 }

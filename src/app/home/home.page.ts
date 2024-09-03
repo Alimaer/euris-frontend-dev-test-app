@@ -4,8 +4,9 @@ import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
 import { IStore } from '../models/store.model';
-import { ProductsService } from '../services/http/products.service';
-import { StoreService } from '../services/http/store.service';
+import { ProductsCallerService } from '../services/http/products-caller.service';
+import { StoreCallerService } from '../services/http/store-caller.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,8 @@ import { StoreService } from '../services/http/store.service';
     IonList,
     IonSkeletonText,
     IonItem,
-    IonAlert
+    IonAlert,
+    RouterModule
   ],
 })
 export class HomePage {
@@ -33,15 +35,13 @@ export class HomePage {
   error: string | null = null;;
 
   private currentPage = 1;
-  private productService = inject(ProductsService);
-  private storeService = inject(StoreService);
+  private productService = inject(ProductsCallerService);
+  private storeService = inject(StoreCallerService);
 
   constructor() {
     this.loadProducts();
     this.loadStore();
   }
-
-
 
   loadProducts(event?: InfiniteScrollCustomEvent) {
 

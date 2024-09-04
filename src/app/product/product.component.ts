@@ -5,6 +5,7 @@ import { IonBackButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonI
 import { IProductData } from '../models/product-data.model';
 import { IProduct } from '../models/product.model';
 import { ProductsDataService } from '../services/products-data.service';
+import { ProductPropertyComponent } from './components/product-property/product-property.component';
 
 const emptySet: IProductData = {
   reviews: [],
@@ -36,7 +37,8 @@ const emptySet: IProductData = {
     IonItem,
     IonLabel,
     IonList,
-    IonListHeader
+    IonListHeader,
+    ProductPropertyComponent
   ]
 })
 export class ProductComponent  implements OnInit {

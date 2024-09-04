@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IonCol, IonItem, IonLabel } from '@ionic/angular/standalone';
+import { IonItem, IonLabel } from '@ionic/angular/standalone';
 
 
 @Component({
@@ -8,7 +8,6 @@ import { IonCol, IonItem, IonLabel } from '@ionic/angular/standalone';
   styleUrls: ['./product-property.component.scss'],
   standalone: true,
   imports: [
-    IonCol,
     IonItem,
     IonLabel
   ]

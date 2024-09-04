@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonRow, IonCol, IonItem, IonLabel } from '@ionic/angular/standalone';
+import { IonBackButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IProductData } from '../models/product-data.model';
 import { IProduct } from '../models/product.model';
 import { ProductsDataService } from '../services/products-data.service';
-import { IProductData } from '../models/product-data.model';
 
 const emptySet: IProductData = {
   reviews: [],
@@ -30,10 +30,13 @@ const emptySet: IProductData = {
     IonBackButton,
     IonTitle,
     IonContent,
+    IonGrid,
     IonRow,
     IonCol,
     IonItem,
-    IonLabel
+    IonLabel,
+    IonList,
+    IonListHeader
   ]
 })
 export class ProductComponent  implements OnInit {

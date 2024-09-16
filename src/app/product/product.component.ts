@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonBackButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { add } from 'ionicons/icons';
 import { IProductData } from '../models/product-data.model';
 import { IProduct } from '../models/product.model';
 import { ProductsDataService } from '../services/products-data.service';
@@ -34,14 +36,15 @@ const emptySet: IProductData = {
     IonGrid,
     IonRow,
     IonCol,
+    IonIcon,
+    IonButton,
     IonItem,
     IonLabel,
     IonList,
-    IonListHeader,
     ProductPropertyComponent
   ]
 })
-export class ProductComponent  implements OnInit {
+export class ProductComponent implements OnInit {
 
   @Input() set id(productId: string) {
     this.product = this.productDataService.getProduct(productId);
@@ -51,7 +54,9 @@ export class ProductComponent  implements OnInit {
 
   private product: IProduct | null = null;
 
-  constructor() { }
+  constructor() {
+    addIcons({ add });
+  }
 
   get data() {
     return this.product?.data ?? emptySet;

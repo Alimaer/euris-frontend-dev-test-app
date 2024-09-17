@@ -23,18 +23,7 @@
       <ion-list>
         <ion-item lines="none">
           <ion-label>Recensioni</ion-label>
-          <ion-button shape="round" color="light" (click)="addReview()">
-            <ion-icon slot="icon-only" name="add"></ion-icon>
-          </ion-button>
         </ion-item>
-        @if (isWriting) {
-          <ion-item>
-            <ion-input placeholder="Inserire nuova recensione" [(ngModel)]="review"></ion-input>
-            <ion-button shape="round" color="light" (click)="saveReview()">
-              <ion-icon slot="icon-only" name="save"></ion-icon>
-            </ion-button>
-          </ion-item>
-        }
         @for (review of data.reviews; track review) {
           <ion-item>
             <p>{{review}}</p>

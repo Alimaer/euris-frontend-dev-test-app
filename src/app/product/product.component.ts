@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonCol, IonGrid, IonIcon, IonInput, IonItem, IonLabel, IonList, IonRow } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { add, save } from 'ionicons/icons';
+import { IonCol, IonGrid, IonItem, IonLabel, IonList, IonRow } from '@ionic/angular/standalone';
 import { IProductData } from '../models/product-data.model';
 import { IProduct } from '../models/product.model';
-import { ProductsDataService } from '../services/products-data.service';
 import { ProductPropertyComponent } from './components/product-property/product-property.component';
 
 const emptySet: IProductData = {
@@ -17,7 +14,6 @@ const emptySet: IProductData = {
   category: null,
   employee: null
 }
-
 
 @Component({
   selector: 'app-product',
@@ -30,49 +26,21 @@ const emptySet: IProductData = {
     IonGrid,
     IonRow,
     IonCol,
-    IonIcon,
-    IonButton,
     IonItem,
     IonLabel,
     IonList,
-    IonInput,
     ProductPropertyComponent
   ]
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent {
 
-  /* @Input() set id(productId: string) {
-    this.product = this.productDataService.getProduct(productId);
-  } */
-
-  @Input() product: IProduct | null = null;
-
-  private productDataService = inject(ProductsDataService);
-
-  isWriting = false;
-
-  review: string | null = null;
-
-  constructor() {
-    addIcons({ add, save });
+  @Input() product: IProduct = {
+    id: '',
+    data: emptySet
   }
 
   get data() {
     return this.product?.data ?? emptySet;
-  }
-
-  ngOnInit() {
-    console.log(this.product);
-  }
-
-  addReview() {
-    this.isWriting = true;
-  }
-
-  saveReview() {
-    console.log(this.review);
-    this.review = null;
-    this.isWriting = false;
   }
 
 }

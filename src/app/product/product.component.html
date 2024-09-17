@@ -1,0 +1,40 @@
+<ion-grid>
+
+  <ion-row>
+    <ion-col>
+      <app-product-property [label]="'Descrizione'" [value]="data.description"></app-product-property>
+    </ion-col>
+    <ion-col>
+      <app-product-property [label]="'Prezzo'" [value]="data.price"></app-product-property>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <app-product-property [label]="'Categoria'" [value]="data.category"></app-product-property>
+    </ion-col>
+    <ion-col>
+      <app-product-property [label]="'Impiegato'" [value]="data.employee"></app-product-property>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-list>
+        <ion-item lines="none">
+          <ion-label>Recensioni</ion-label>
+        </ion-item>
+        @for (review of data.reviews; track review) {
+          <ion-item>
+            <p>{{review}}</p>
+          </ion-item>
+        } @empty {
+          <ion-item>
+            <p>Nessuna recensione</p>
+          </ion-item>
+        }
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  
+</ion-grid>

@@ -1,11 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar, IonInfiniteScroll, IonInfiniteScrollContent, IonAccordionGroup, IonAccordion, IonLabel } from '@ionic/angular/standalone';
 import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
 import { IStore } from '../models/store.model';
-import { ProductsService } from '../services/http/products.service';
-import { StoreService } from '../services/http/store.service';
+import { ProductsCallerService } from '../services/http/products-caller.service';
+import { StoreCallerService } from '../services/http/store-caller.service';
+import { RouterModule } from '@angular/router';
+import { ProductsDataService } from '../services/products-data.service';
+import { ProductComponent } from '../product/product.component';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +23,14 @@ import { StoreService } from '../services/http/store.service';
     IonList,
     IonSkeletonText,
     IonItem,
-    IonAlert
+    IonAlert,
+    IonAccordionGroup,
+    IonAccordion,
+    IonLabel,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
+    RouterModule,
+    ProductComponent
   ],
 })
 export class HomePage {
@@ -33,15 +43,14 @@ export class HomePage {
   error: string | null = null;;
 
   private currentPage = 1;
-  private productService = inject(ProductsService);
-  private storeService = inject(StoreService);
+  private productService = inject(ProductsCallerService);
+  private productDataService  = inject(ProductsDataService);
+  private storeService = inject(StoreCallerService);
 
   constructor() {
     this.loadProducts();
     this.loadStore();
   }
-
-
 
   loadProducts(event?: InfiniteScrollCustomEvent) {
 
@@ -61,12 +70,11 @@ export class HomePage {
       next: (products: IProductList) => {
         this.isProductsLoading = false;
         this.products.push(...products.list);
+        this.productDataService.addProducts(products.list);
 
         if (event) {
           event.target.disabled = products.list.length < 10;
         }
-
-        console.log(products);
       },
       error: error => {
         this.isProductsLoading = false;
@@ -75,8 +83,17 @@ export class HomePage {
     });
   }
 
-  loadStore(event?: InfiniteScrollCustomEvent) {
+  loadMoreProducts(event: InfiniteScrollCustomEvent) {
+    if(this.products.length < 10) {
+      event.target.complete();
+      return;
+    }
 
+    this.currentPage++;
+    this.loadProducts(event);
+  }
+
+  loadStore(event?: InfiniteScrollCustomEvent) {
     if (!event) {
       this.isStoreLoading = true;
     }
@@ -93,8 +110,6 @@ export class HomePage {
       next: (store: IStore) => {
         this.isStoreLoading = false;
         this.storeName = store.name;
-
-        console.log(store);
       },
       error: error => {
         this.isStoreLoading = false;

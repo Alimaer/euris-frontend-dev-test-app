@@ -7,7 +7,7 @@ import { IStore } from 'src/app/models/store.model';
 @Injectable({
   providedIn: 'root'
 })
-export class StoreService {
+export class StoreCallerService {
 
   private http = inject(HttpClient);
 

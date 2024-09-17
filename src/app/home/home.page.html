@@ -28,12 +28,19 @@
   }
 
   <ion-accordion-group>
-    <ion-item>
-      <ion-label>Aggiungi Prodotto</ion-label>
-      <ion-button shape="round" color="dark" (click)="openProductCreation()">
-        <ion-icon slot="icon-only" name="add"></ion-icon>
-      </ion-button>
-    </ion-item>
+    @if (!isProductsLoading) {
+      <ion-item>
+        <ion-label>Aggiungi Prodotto</ion-label>
+        <ion-button shape="round" color="dark" (click)="isCreating = true">
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+        </ion-button>
+      </ion-item>
+    }
+
+    @if (isCreating) {
+      <app-product-create></app-product-create>
+    }
+
     @for (product of products; track product.id) {
       <ion-accordion>
         <ion-item lines="none" slot="header">

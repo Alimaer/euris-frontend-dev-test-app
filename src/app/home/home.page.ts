@@ -10,6 +10,7 @@ import { StoreCallerService } from '../services/http/store-caller.service';
 import { ProductsDataService } from '../services/products-data.service';
 import { addIcons } from 'ionicons';
 import { add } from 'ionicons/icons';
+import { ProductCreateComponent } from '../product-create/product-create.component';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +33,8 @@ import { add } from 'ionicons/icons';
     Ion.IonInfiniteScrollContent,
     Ion.IonButton,
     Ion.IonIcon,
-    ProductComponent
+    ProductComponent,
+    ProductCreateComponent
   ],
 })
 export class HomePage {
@@ -42,6 +44,7 @@ export class HomePage {
   storeName: string | null = null;
   isProductsLoading = false;
   isStoreLoading = false;
+  isCreating = false;
   error: string | null = null;;
 
   private currentPage = 1;
@@ -119,9 +122,5 @@ export class HomePage {
         this.error = error;
       }
     });
-  }
-
-  openProductCreation() {
-    
   }
 }

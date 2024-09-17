@@ -1,14 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar, IonInfiniteScroll, IonInfiniteScrollContent, IonAccordionGroup, IonAccordion, IonLabel } from '@ionic/angular/standalone';
+import * as Ion from '@ionic/angular/standalone';
 import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
 import { IStore } from '../models/store.model';
+import { ProductComponent } from '../product/product.component';
 import { ProductsCallerService } from '../services/http/products-caller.service';
 import { StoreCallerService } from '../services/http/store-caller.service';
-import { RouterModule } from '@angular/router';
 import { ProductsDataService } from '../services/products-data.service';
-import { ProductComponent } from '../product/product.component';
+import { addIcons } from 'ionicons';
+import { add } from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
@@ -16,20 +17,21 @@ import { ProductComponent } from '../product/product.component';
   styleUrls: ['home.page.scss'],
   standalone: true,
   imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonSkeletonText,
-    IonItem,
-    IonAlert,
-    IonAccordionGroup,
-    IonAccordion,
-    IonLabel,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    RouterModule,
+    Ion.IonHeader,
+    Ion.IonToolbar,
+    Ion.IonTitle,
+    Ion.IonContent,
+    Ion.IonList,
+    Ion.IonSkeletonText,
+    Ion.IonItem,
+    Ion.IonAlert,
+    Ion.IonAccordionGroup,
+    Ion.IonAccordion,
+    Ion.IonLabel,
+    Ion.IonInfiniteScroll,
+    Ion.IonInfiniteScrollContent,
+    Ion.IonButton,
+    Ion.IonIcon,
     ProductComponent
   ],
 })
@@ -50,9 +52,10 @@ export class HomePage {
   constructor() {
     this.loadProducts();
     this.loadStore();
+    addIcons({ add });
   }
 
-  loadProducts(event?: InfiniteScrollCustomEvent) {
+  loadProducts(event?: Ion.InfiniteScrollCustomEvent) {
 
     if (!event) {
       this.isProductsLoading = true;
@@ -83,7 +86,7 @@ export class HomePage {
     });
   }
 
-  loadMoreProducts(event: InfiniteScrollCustomEvent) {
+  loadMoreProducts(event: Ion.InfiniteScrollCustomEvent) {
     if(this.products.length < 10) {
       event.target.complete();
       return;
@@ -93,7 +96,7 @@ export class HomePage {
     this.loadProducts(event);
   }
 
-  loadStore(event?: InfiniteScrollCustomEvent) {
+  loadStore(event?: Ion.InfiniteScrollCustomEvent) {
     if (!event) {
       this.isStoreLoading = true;
     }
@@ -116,5 +119,9 @@ export class HomePage {
         this.error = error;
       }
     });
+  }
+
+  openProductCreation() {
+    
   }
 }

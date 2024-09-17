@@ -28,6 +28,12 @@
   }
 
   <ion-accordion-group>
+    <ion-item>
+      <ion-label>Aggiungi Prodotto</ion-label>
+      <ion-button shape="round" color="dark" (click)="openProductCreation()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-item>
     @for (product of products; track product.id) {
       <ion-accordion>
         <ion-item lines="none" slot="header">

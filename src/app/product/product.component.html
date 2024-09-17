@@ -1,55 +1,51 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
-    </ion-buttons>
-    <ion-title> {{ data.title }} </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-grid>
 
-<ion-content>
+  <ion-row>
+    <ion-col>
+      <app-product-property [label]="'Descrizione'" [value]="data.description"></app-product-property>
+    </ion-col>
+    <ion-col>
+      <app-product-property [label]="'Prezzo'" [value]="data.price"></app-product-property>
+    </ion-col>
+  </ion-row>
 
-  <ion-grid>
+  <ion-row>
+    <ion-col>
+      <app-product-property [label]="'Categoria'" [value]="data.category"></app-product-property>
+    </ion-col>
+    <ion-col>
+      <app-product-property [label]="'Impiegato'" [value]="data.employee"></app-product-property>
+    </ion-col>
+  </ion-row>
 
-    <ion-row>
-      <ion-col>
-        <app-product-property [label]="'Descrizione'" [value]="data.description"></app-product-property>
-      </ion-col>
-      <ion-col>
-        <app-product-property [label]="'Prezzo'" [value]="data.price"></app-product-property>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <app-product-property [label]="'Categoria'" [value]="data.category"></app-product-property>
-      </ion-col>
-      <ion-col>
-        <app-product-property [label]="'Impiegato'" [value]="data.employee"></app-product-property>
-      </ion-col>
-    </ion-row>
-  
-    <ion-row>
-      <ion-col>
-        <ion-list>
-          <ion-item lines="none">
-            <ion-label>Recensioni</ion-label>
-            <ion-button shape="round" color="light">
-              <ion-icon slot="icon-only" name="add"></ion-icon>
+  <ion-row>
+    <ion-col>
+      <ion-list>
+        <ion-item lines="none">
+          <ion-label>Recensioni</ion-label>
+          <ion-button shape="round" color="light" (click)="addReview()">
+            <ion-icon slot="icon-only" name="add"></ion-icon>
+          </ion-button>
+        </ion-item>
+        @if (isWriting) {
+          <ion-item>
+            <ion-input placeholder="Inserire nuova recensione" [(ngModel)]="review"></ion-input>
+            <ion-button shape="round" color="light" (click)="saveReview()">
+              <ion-icon slot="icon-only" name="save"></ion-icon>
             </ion-button>
           </ion-item>
-          @for (review of data.reviews; track review) {
-            <ion-item>
-              <p>{{review}}</p>
-            </ion-item>
-          } @empty {
-            <ion-item>
-              <p>Nessuna recensione</p>
-            </ion-item>
-          }
-        </ion-list>
-      </ion-col>
-    </ion-row>
-    
-  </ion-grid>
-</ion-content>
+        }
+        @for (review of data.reviews; track review) {
+          <ion-item>
+            <p>{{review}}</p>
+          </ion-item>
+        } @empty {
+          <ion-item>
+            <p>Nessuna recensione</p>
+          </ion-item>
+        }
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  
+</ion-grid>

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/angular/standalone';
+import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar, IonInfiniteScroll, IonInfiniteScrollContent, IonAccordionGroup, IonAccordion, IonLabel } from '@ionic/angular/standalone';
 import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
@@ -8,6 +8,7 @@ import { ProductsCallerService } from '../services/http/products-caller.service'
 import { StoreCallerService } from '../services/http/store-caller.service';
 import { RouterModule } from '@angular/router';
 import { ProductsDataService } from '../services/products-data.service';
+import { ProductComponent } from '../product/product.component';
 
 @Component({
   selector: 'app-home',
@@ -23,9 +24,13 @@ import { ProductsDataService } from '../services/products-data.service';
     IonSkeletonText,
     IonItem,
     IonAlert,
+    IonAccordionGroup,
+    IonAccordion,
+    IonLabel,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
-    RouterModule
+    RouterModule,
+    ProductComponent
   ],
 })
 export class HomePage {

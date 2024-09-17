@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonCol, IonGrid, IonIcon, IonInput, IonItem, IonLabel, IonList, IonRow } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add } from 'ionicons/icons';
+import { add, save } from 'ionicons/icons';
 import { IProductData } from '../models/product-data.model';
 import { IProduct } from '../models/product.model';
 import { ProductsDataService } from '../services/products-data.service';
@@ -27,12 +27,6 @@ const emptySet: IProductData = {
   imports: [
     CommonModule,
     FormsModule,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonBackButton,
-    IonTitle,
-    IonContent,
     IonGrid,
     IonRow,
     IonCol,
@@ -41,6 +35,7 @@ const emptySet: IProductData = {
     IonItem,
     IonLabel,
     IonList,
+    IonInput,
     ProductPropertyComponent
   ]
 })
@@ -54,8 +49,12 @@ export class ProductComponent implements OnInit {
 
   private product: IProduct | null = null;
 
+  isWriting = false;
+
+  review: string | null = null;
+
   constructor() {
-    addIcons({ add });
+    addIcons({ add, save });
   }
 
   get data() {
@@ -64,6 +63,16 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.product);
+  }
+
+  addReview() {
+    this.isWriting = true;
+  }
+
+  saveReview() {
+    console.log(this.review);
+    this.review = null;
+    this.isWriting = false;
   }
 
 }

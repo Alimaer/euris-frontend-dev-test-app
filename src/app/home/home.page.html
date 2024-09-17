@@ -27,11 +27,16 @@
     <ion-alert header="Error" [message]="error" isOpen="true" [buttons]="['Ok']"/>
   }
 
-  <ion-list>
+  <ion-accordion-group>
     @for (product of products; track product.id) {
-      <ion-item lines="none" button [routerLink]="['/product', product.id]">
-        <p>{{product.data.title}}</p>
-      </ion-item>
+      <ion-accordion>
+        <ion-item lines="none" slot="header">
+          <ion-label>{{product.data.title}}</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+            <app-product [id]="product.id"></app-product>
+        </div>
+      </ion-accordion>
     } @empty {
       @if (!isProductsLoading) {
         <ion-item lines="none">
@@ -39,7 +44,7 @@
         </ion-item>
       }
     }
-  </ion-list>
+  </ion-accordion-group>
 
   <ion-infinite-scroll (ionInfinite)="loadMoreProducts($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Caricamento prodotti..."></ion-infinite-scroll-content>

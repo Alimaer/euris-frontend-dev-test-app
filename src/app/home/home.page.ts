@@ -84,8 +84,10 @@ export class HomePage {
   }
 
   loadMoreProducts(event: InfiniteScrollCustomEvent) {
-    if(this.products.length < 10)
+    if(this.products.length < 10) {
+      event.target.complete();
       return;
+    }
 
     this.currentPage++;
     this.loadProducts(event);

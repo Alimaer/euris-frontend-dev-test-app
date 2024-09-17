@@ -41,13 +41,13 @@ const emptySet: IProductData = {
 })
 export class ProductComponent implements OnInit {
 
-  @Input() set id(productId: string) {
+  /* @Input() set id(productId: string) {
     this.product = this.productDataService.getProduct(productId);
-  }
+  } */
+
+  @Input() product: IProduct | null = null;
 
   private productDataService = inject(ProductsDataService);
-
-  private product: IProduct | null = null;
 
   isWriting = false;
 

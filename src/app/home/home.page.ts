@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import * as Ion from '@ionic/angular/standalone';
 import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
@@ -9,8 +9,9 @@ import { ProductsCallerService } from '../services/http/products-caller.service'
 import { StoreCallerService } from '../services/http/store-caller.service';
 import { ProductsDataService } from '../services/products-data.service';
 import { addIcons } from 'ionicons';
-import { add } from 'ionicons/icons';
+import { add, close } from 'ionicons/icons';
 import { ProductCreateComponent } from '../product-create/product-create.component';
+import { OverlayEventDetail } from '@ionic/core/components';
 
 @Component({
   selector: 'app-home',
@@ -32,20 +33,25 @@ import { ProductCreateComponent } from '../product-create/product-create.compone
     Ion.IonInfiniteScroll,
     Ion.IonInfiniteScrollContent,
     Ion.IonButton,
+    Ion.IonButtons,
     Ion.IonIcon,
+    Ion.IonModal,
+    Ion.IonFooter,
     ProductComponent,
     ProductCreateComponent
   ],
 })
 export class HomePage {
 
+  @ViewChild(Ion.IonModal) modal: Ion.IonModal | undefined;
+
   dummyProducts = new Array(5);
   products: IProduct[] = [];
   storeName: string | null = null;
   isProductsLoading = false;
   isStoreLoading = false;
-  isCreating = false;
-  error: string | null = null;;
+  error: string | null = null;
+  name = 'productCreationModal';
 
   private currentPage = 1;
   private productService = inject(ProductsCallerService);
@@ -55,7 +61,7 @@ export class HomePage {
   constructor() {
     this.loadProducts();
     this.loadStore();
-    addIcons({ add });
+    addIcons({ add, close });
   }
 
   loadProducts(event?: Ion.InfiniteScrollCustomEvent) {
@@ -122,5 +128,22 @@ export class HomePage {
         this.error = error;
       }
     });
+  }
+
+  cancel() {
+    if(this.modal)
+      this.modal.dismiss(null, 'cancel');
+  }
+
+  confirm() {
+    if(this.modal)
+      this.modal.dismiss(this.name, 'confirm');
+  }
+
+  onWillDismiss(event: Event) {
+    const ev = event as CustomEvent<OverlayEventDetail<string>>;
+    if (ev.detail.role === 'confirm') {
+      console.log('ciao');
+    }
   }
 }

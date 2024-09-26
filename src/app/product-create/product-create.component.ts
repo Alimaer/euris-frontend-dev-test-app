@@ -32,7 +32,8 @@ import { ProductsCallerService } from '../services/http/products-caller.service'
     Ion.IonButtons,
     Ion.IonToolbar,
     Ion.IonContent,
-    Ion.IonHeader
+    Ion.IonHeader,
+    Ion.IonAlert
   ]
 })
 export class ProductCreateComponent {

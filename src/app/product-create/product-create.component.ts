@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as Ion from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { add, close } from 'ionicons/icons';
@@ -47,7 +47,18 @@ export class ProductCreateComponent {
   error: string | null = null;
   isLoading: boolean = false;
 
-  newProductGroup = this.builder.group({
+  newProductGroup = new FormGroup({
+    description: new FormControl<string | null>(null),
+    category: new FormControl<string | null>(null),
+    employee: new FormControl<string | null>(null),
+    title: new FormControl<string | null>(null),
+    price: new FormControl<number | null>(null),
+    reviews: new FormArray([
+      new FormControl<string | null>(null)
+    ])
+  })
+
+  /* newProductGroup = this.builder.group({
     description: null,
     category: null,
     employee: null,
@@ -57,7 +68,7 @@ export class ProductCreateComponent {
       this.builder.control('')
     ])
   });
-
+ */
   constructor() {
     addIcons({ add, close });
   }
@@ -86,9 +97,12 @@ export class ProductCreateComponent {
       id: null,
       data: {
         ...this.newProductGroup.getRawValue(),
+        price: _.toInteger(this.newProductGroup.get('price')?.value),
         reviews: _.compact(this.newProductGroup.get('reviews')?.value ?? [])
       }
     };
+
+    newProduct.data.price
 
     this.productService.addProduct(newProduct).subscribe({
       next: () => {

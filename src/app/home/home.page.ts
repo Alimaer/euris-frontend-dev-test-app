@@ -85,7 +85,7 @@ export class HomePage {
       },
       error: error => {
         this.isProductsLoading = false;
-        this.error = error;
+        this.error = error.message ? error.message : error;
       }
     });
   }
@@ -98,6 +98,11 @@ export class HomePage {
 
     this.currentPage++;
     this.loadProducts(event);
+  }
+
+  reloadProducts() {
+    this.currentPage = 1;
+    this.loadProducts();
   }
 
   loadStore(event?: Ion.InfiniteScrollCustomEvent) {
@@ -120,7 +125,7 @@ export class HomePage {
       },
       error: error => {
         this.isStoreLoading = false;
-        this.error = error;
+        this.error = error.message ? error.message : error;
       }
     });
   }
@@ -135,7 +140,7 @@ export class HomePage {
       },
       error: error => {
         this.isProductsDeleting = false;
-        this.error = error;
+        this.error = error.message ? error.message : error;
       }
     });
   }

@@ -30,7 +30,7 @@
   <ion-accordion-group>
     @if (!isProductsLoading) {
       <ion-item>
-        <app-product-create></app-product-create>
+        <app-product-create (productCreated)="reloadProducts()"></app-product-create>
       </ion-item>
     }
 

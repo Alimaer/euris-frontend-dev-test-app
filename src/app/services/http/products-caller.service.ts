@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BASE_URL, STORE_ID } from 'src/app/app.constants';
+import { IProductData } from 'src/app/models/product-data.model';
 import { IProductList } from 'src/app/models/product-list.model';
 import { IProduct } from 'src/app/models/product.model';
 
@@ -20,7 +21,7 @@ export class ProductsCallerService {
     );
   }
 
-  addProduct(product: IProduct): Observable<any> {
+  addProduct(product: IProductData): Observable<any> {
     return this.http.post(
       `${BASE_URL}/stores/${STORE_ID}/products`,
       product

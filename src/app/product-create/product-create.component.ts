@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Output, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as Ion from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -7,6 +7,7 @@ import { add, close } from 'ionicons/icons';
 import * as _ from 'lodash';
 import { IProduct } from '../models/product.model';
 import { ProductsCallerService } from '../services/http/products-caller.service';
+import { IProductData } from '../models/product-data.model';
 
 
 @Component({
@@ -40,6 +41,8 @@ export class ProductCreateComponent {
 
   @ViewChild(Ion.IonModal) modal: Ion.IonModal | undefined;
 
+  @Output() productCreated = new EventEmitter();
+
   private builder = inject(FormBuilder);
   private productService = inject(ProductsCallerService);
 
@@ -56,19 +59,8 @@ export class ProductCreateComponent {
     reviews: new FormArray([
       new FormControl<string | null>(null)
     ])
-  })
-
-  /* newProductGroup = this.builder.group({
-    description: null,
-    category: null,
-    employee: null,
-    price: null,
-    title: null,
-    reviews: this.builder.array([
-      this.builder.control('')
-    ])
   });
- */
+
   constructor() {
     addIcons({ add, close });
   }
@@ -93,25 +85,22 @@ export class ProductCreateComponent {
   confirm() {
     this.isLoading = true;
 
-    const newProduct: IProduct = {
-      id: null,
-      data: {
+    const newProductData: IProductData = {
         ...this.newProductGroup.getRawValue(),
         price: _.toInteger(this.newProductGroup.get('price')?.value),
         reviews: _.compact(this.newProductGroup.get('reviews')?.value ?? [])
-      }
     };
 
-    newProduct.data.price
-
-    this.productService.addProduct(newProduct).subscribe({
+    this.productService.addProduct(newProductData).subscribe({
       next: () => {
         this.isLoading = false;
         if (this.modal)
           this.modal.dismiss(this.name, 'confirm');
+
+        this.productCreated.emit();
       },
       error: error => {
-        this.error = error;
+        this.error = error.message ? error.message : error;
         this.isLoading = false;
       }
     });

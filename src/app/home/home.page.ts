@@ -1,14 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { InfiniteScrollCustomEvent, IonAlert, IonContent, IonHeader, IonItem, IonList, IonSkeletonText, IonTitle, IonToolbar, IonInfiniteScroll, IonInfiniteScrollContent, IonAccordionGroup, IonAccordion, IonLabel } from '@ionic/angular/standalone';
+import * as Ion from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { add, close } from 'ionicons/icons';
 import { delay, finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
 import { IStore } from '../models/store.model';
+import { ProductCreateComponent } from '../product-create/product-create.component';
+import { ProductComponent } from '../product/product.component';
 import { ProductsCallerService } from '../services/http/products-caller.service';
 import { StoreCallerService } from '../services/http/store-caller.service';
-import { RouterModule } from '@angular/router';
 import { ProductsDataService } from '../services/products-data.service';
-import { ProductComponent } from '../product/product.component';
 
 @Component({
   selector: 'app-home',
@@ -16,21 +18,24 @@ import { ProductComponent } from '../product/product.component';
   styleUrls: ['home.page.scss'],
   standalone: true,
   imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonSkeletonText,
-    IonItem,
-    IonAlert,
-    IonAccordionGroup,
-    IonAccordion,
-    IonLabel,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    RouterModule,
-    ProductComponent
+    Ion.IonHeader,
+    Ion.IonToolbar,
+    Ion.IonTitle,
+    Ion.IonContent,
+    Ion.IonList,
+    Ion.IonSkeletonText,
+    Ion.IonItem,
+    Ion.IonAlert,
+    Ion.IonAccordionGroup,
+    Ion.IonAccordion,
+    Ion.IonLabel,
+    Ion.IonInfiniteScroll,
+    Ion.IonInfiniteScrollContent,
+    Ion.IonButton,
+    Ion.IonButtons,
+    Ion.IonIcon,
+    ProductComponent,
+    ProductCreateComponent
   ],
 })
 export class HomePage {
@@ -39,20 +44,22 @@ export class HomePage {
   products: IProduct[] = [];
   storeName: string | null = null;
   isProductsLoading = false;
+  isProductsDeleting = false;
   isStoreLoading = false;
-  error: string | null = null;;
+  error: string | null = null;
 
   private currentPage = 1;
   private productService = inject(ProductsCallerService);
-  private productDataService  = inject(ProductsDataService);
+  private productDataService = inject(ProductsDataService);
   private storeService = inject(StoreCallerService);
 
   constructor() {
     this.loadProducts();
     this.loadStore();
+    addIcons({ add, close });
   }
 
-  loadProducts(event?: InfiniteScrollCustomEvent) {
+  loadProducts(event?: Ion.InfiniteScrollCustomEvent) {
 
     if (!event) {
       this.isProductsLoading = true;
@@ -69,8 +76,8 @@ export class HomePage {
     ).subscribe({
       next: (products: IProductList) => {
         this.isProductsLoading = false;
-        this.products.push(...products.list);
         this.productDataService.addProducts(products.list);
+        this.products = this.productDataService.products;
 
         if (event) {
           event.target.disabled = products.list.length < 10;
@@ -78,13 +85,13 @@ export class HomePage {
       },
       error: error => {
         this.isProductsLoading = false;
-        this.error = error;
+        this.error = error.message ? error.message : error;
       }
     });
   }
 
-  loadMoreProducts(event: InfiniteScrollCustomEvent) {
-    if(this.products.length < 10) {
+  loadMoreProducts(event: Ion.InfiniteScrollCustomEvent) {
+    if (this.products.length < 10) {
       event.target.complete();
       return;
     }
@@ -93,7 +100,7 @@ export class HomePage {
     this.loadProducts(event);
   }
 
-  loadStore(event?: InfiniteScrollCustomEvent) {
+  loadStore(event?: Ion.InfiniteScrollCustomEvent) {
     if (!event) {
       this.isStoreLoading = true;
     }
@@ -113,7 +120,26 @@ export class HomePage {
       },
       error: error => {
         this.isStoreLoading = false;
-        this.error = error;
+        this.error = error.message ? error.message : error;
+      }
+    });
+  }
+
+  addProduct(newProduct: IProduct) {
+    this.productDataService.addProducts([newProduct]);
+  }
+
+  deleteProduct(productId: string) {
+
+    this.isProductsDeleting = true;
+
+    this.productService.deleteProduct(productId).subscribe({
+      next: () => {
+        this.productDataService.deleteProduct(productId);
+      },
+      error: error => {
+        this.isProductsDeleting = false;
+        this.error = error.message ? error.message : error;
       }
     });
   }

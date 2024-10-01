@@ -1,6 +1,15 @@
 <ion-grid>
 
   <ion-row>
+    <ion-col class="col-cancel-product">
+      <ion-button shape="round" size="small" color="danger" (click)="delete()" [disabled]="!product.id">
+        Elimina prodotto
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
     <ion-col>
       <app-product-property [label]="'Descrizione'" [value]="data.description"></app-product-property>
     </ion-col>

@@ -28,13 +28,19 @@
   }
 
   <ion-accordion-group>
+    @if (!isProductsLoading) {
+      <ion-item>
+        <app-product-create (productCreated)="addProduct($event)"></app-product-create>
+      </ion-item>
+    }
+
     @for (product of products; track product.id) {
       <ion-accordion>
         <ion-item lines="none" slot="header">
           <ion-label>{{product.data.title}}</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-            <app-product [product]="product"></app-product>
+            <app-product [product]="product" (deleteProd)="deleteProduct($event)"></app-product>
         </div>
       </ion-accordion>
     } @empty {

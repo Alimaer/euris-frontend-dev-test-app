@@ -40,7 +40,7 @@
           <ion-label>{{product.data.title}}</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-            <app-product [product]="product"></app-product>
+            <app-product [product]="product" (deleteProd)="deleteProduct($event)"></app-product>
         </div>
       </ion-accordion>
     } @empty {

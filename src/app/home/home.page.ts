@@ -44,6 +44,7 @@ export class HomePage {
   products: IProduct[] = [];
   storeName: string | null = null;
   isProductsLoading = false;
+  isProductsDeleting = false;
   isStoreLoading = false;
   error: string | null = null;
 
@@ -75,8 +76,8 @@ export class HomePage {
     ).subscribe({
       next: (products: IProductList) => {
         this.isProductsLoading = false;
-        this.products.push(...products.list);
         this.productDataService.addProducts(products.list);
+        this.products = this.productDataService.products;
 
         if (event) {
           event.target.disabled = products.list.length < 10;
@@ -119,6 +120,21 @@ export class HomePage {
       },
       error: error => {
         this.isStoreLoading = false;
+        this.error = error;
+      }
+    });
+  }
+
+  deleteProduct(productId: string) {
+
+    this.isProductsDeleting = true;
+
+    this.productService.deleteProduct(productId).subscribe({
+      next: () => {
+        this.productDataService.deleteProduct(productId);
+      },
+      error: error => {
+        this.isProductsDeleting = false;
         this.error = error;
       }
     });

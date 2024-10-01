@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonCol, IonGrid, IonItem, IonLabel, IonList, IonRow, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { IProductData } from '../models/product-data.model';
@@ -43,12 +43,18 @@ export class ProductComponent {
     data: emptySet
   }
 
+  @Output() deleteProd = new EventEmitter<string>();
+
   constructor() {
     addIcons({ close });
   }
 
   get data() {
     return this.product?.data ?? emptySet;
+  }
+
+  delete() {
+    this.deleteProd.emit(this.product.id!);
   }
 
 }

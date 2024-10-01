@@ -2,7 +2,7 @@
 
   <ion-row>
     <ion-col class="col-cancel-product">
-      <ion-button shape="round" size="small" color="danger">
+      <ion-button shape="round" size="small" color="danger" (click)="delete()" [disabled]="!product.id">
         Elimina prodotto
         <ion-icon name="close"></ion-icon>
       </ion-button>

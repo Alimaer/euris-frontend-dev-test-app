@@ -26,4 +26,10 @@ export class ProductsCallerService {
       product
     );
   }
+
+  deleteProduct(productId: string): Observable<any> {
+    return this.http.delete(
+      `${BASE_URL}/stores/${STORE_ID}/products/${productId}`
+    );
+  }
 }

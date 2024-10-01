@@ -79,8 +79,10 @@ export class ProductCreateComponent {
   }
 
   cancel() {
-    if (this.modal)
+    if (this.modal) {
+      this.newProductGroup.reset();
       this.modal.dismiss(null, 'cancel');
+    }
   }
 
   confirm() {
@@ -100,6 +102,9 @@ export class ProductCreateComponent {
       ).subscribe({
       next: (newProduct) => {
         this.isLoading = false;
+
+        this.newProductGroup.reset();
+
         if (this.modal)
           this.modal.dismiss(this.name, 'confirm');
 

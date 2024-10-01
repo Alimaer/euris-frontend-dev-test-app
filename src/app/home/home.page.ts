@@ -100,11 +100,6 @@ export class HomePage {
     this.loadProducts(event);
   }
 
-  reloadProducts() {
-    this.currentPage = 1;
-    this.loadProducts();
-  }
-
   loadStore(event?: Ion.InfiniteScrollCustomEvent) {
     if (!event) {
       this.isStoreLoading = true;
@@ -128,6 +123,10 @@ export class HomePage {
         this.error = error.message ? error.message : error;
       }
     });
+  }
+
+  addProduct(newProduct: IProduct) {
+    this.productDataService.addProducts([newProduct]);
   }
 
   deleteProduct(productId: string) {

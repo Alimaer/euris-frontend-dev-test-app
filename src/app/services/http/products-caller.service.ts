@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { BASE_URL, STORE_ID } from 'src/app/app.constants';
 import { IProductData } from 'src/app/models/product-data.model';
 import { IProductList } from 'src/app/models/product-list.model';
@@ -21,10 +21,26 @@ export class ProductsCallerService {
     );
   }
 
-  addProduct(product: IProductData): Observable<any> {
+  getProduct(productId: string): Observable<IProduct> {
+    return this.http.get<IProductData>(
+      `${BASE_URL}/stores/${STORE_ID}/products/${productId}`
+    ).pipe(
+      map(productData => {
+        return {
+          id: productId,
+          data: productData
+        } as IProduct
+      })
+    );
+  }
+
+  addProduct(product: IProductData): Observable<string> {
     return this.http.post(
       `${BASE_URL}/stores/${STORE_ID}/products`,
-      product
+      product, 
+      {
+        responseType: 'text'
+      }
     );
   }
 

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import * as Ion from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { add, close } from 'ionicons/icons';
-import { delay, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { IProductList } from '../models/product-list.model';
 import { IProduct } from '../models/product.model';
 import { IStore } from '../models/store.model';
@@ -66,7 +66,6 @@ export class HomePage {
     }
 
     this.productService.getProducts().pipe(
-      delay(3000),
       finalize(() => {
         this.isProductsLoading = false;
         if (event) {
@@ -106,7 +105,6 @@ export class HomePage {
     }
 
     this.storeService.getStore().pipe(
-      delay(3000),
       finalize(() => {
         this.isStoreLoading = false;
         if (event) {

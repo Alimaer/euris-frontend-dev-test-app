@@ -1,5 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header [translucent]="true" data-cy="home-header">
+  <ion-toolbar data-cy="home-header-toolbar">
     <ion-title>
       @if (isStoreLoading) {
         <ion-skeleton-text animated style="height: 40px"></ion-skeleton-text>
@@ -14,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" data-cy="home-content">
   @if (isProductsLoading) {
     <ion-list>
       @for (i of dummyProducts; track i) {
@@ -37,7 +37,7 @@
     @for (product of products; track product.id) {
       <ion-accordion>
         <ion-item lines="none" slot="header">
-          <ion-label>{{product.data.title}}</ion-label>
+          <ion-label data-cy="home-content-product-title">{{product.data.title}}</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
             <app-product [product]="product" (deleteProd)="deleteProduct($event)"></app-product>

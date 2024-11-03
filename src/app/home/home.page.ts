@@ -46,7 +46,9 @@ export class HomePage {
   isProductsLoading = false;
   isProductsDeleting = false;
   isStoreLoading = false;
-  error: string | null = null;
+  storeError: string | null = null;
+  productsError: string | null = null;
+  deleteError: string | null = null;
 
   private currentPage = 1;
   private productService = inject(ProductsCallerService);
@@ -84,7 +86,7 @@ export class HomePage {
       },
       error: error => {
         this.isProductsLoading = false;
-        this.error = error.message ? error.message : error;
+        this.productsError = error.message ? error.message : error;
       }
     });
   }
@@ -118,7 +120,7 @@ export class HomePage {
       },
       error: error => {
         this.isStoreLoading = false;
-        this.error = error.message ? error.message : error;
+        this.storeError = error.message ? error.message : error;
       }
     });
   }
@@ -137,7 +139,7 @@ export class HomePage {
       },
       error: error => {
         this.isProductsDeleting = false;
-        this.error = error.message ? error.message : error;
+        this.deleteError = error.message ? error.message : error;
       }
     });
   }

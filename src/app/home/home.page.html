@@ -3,8 +3,8 @@
     <ion-title>
       @if (isStoreLoading) {
         <ion-skeleton-text animated style="height: 40px"></ion-skeleton-text>
-      } @else if (error) {
-        <ion-alert header="Error" [message]="error" isOpen="true" [buttons]="['Ok']"/>
+      } @else if (storeError) {
+        <ion-alert header="Error" [message]="storeError" isOpen="true" [buttons]="['Ok']"/>
       }
 
       @if (storeName) {
@@ -15,6 +15,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" data-cy="home-content">
+
+  @if (deleteError) {
+    <ion-alert header="Error" [message]="deleteError" isOpen="true" [buttons]="['Ok']"/>
+  }
+
+
   @if (isProductsLoading) {
     <ion-list>
       @for (i of dummyProducts; track i) {
@@ -23,8 +29,8 @@
         </ion-item>
       }
     </ion-list>
-  } @else if (error) {
-    <ion-alert header="Error" [message]="error" isOpen="true" [buttons]="['Ok']"/>
+  } @else if (productsError) {
+    <ion-alert header="Error" [message]="productsError" isOpen="true" [buttons]="['Ok']"/>
   }
 
   <ion-accordion-group>

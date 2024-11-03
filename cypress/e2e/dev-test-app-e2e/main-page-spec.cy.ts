@@ -1,6 +1,5 @@
 import { BASE_URL, STORE_ID } from "src/app/app.constants";
 import { IProductList } from "src/app/models/product-list.model";
-import { IProduct } from "src/app/models/product.model";
 import { IStore } from "src/app/models/store.model";
 
 const fake_store: IStore = {
@@ -87,7 +86,15 @@ describe('main page test suite', () => {
 
   it('intercept product call and verify data visualization', () => {
     cy.wait('@productCall').then(() => {
-      cy.dataCy('home-content-product-title').should('have.length', 3);
+
+      const titleElements = cy.dataCy('home-content-product-title');
+
+      fake_products_list.list.forEach(element => {
+        titleElements.should('include.text', element.data.title);
+      });
+      
     });
   });
+
+
 });

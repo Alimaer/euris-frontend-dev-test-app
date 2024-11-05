@@ -41,7 +41,7 @@
     }
 
     @for (product of products; track product.id) {
-      <ion-accordion>
+      <ion-accordion id="{{product.id}}">
         <ion-item lines="none" slot="header">
           <ion-label data-cy="home-content-product-title">{{product.data.title}}</ion-label>
         </ion-item>

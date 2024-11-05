@@ -35,7 +35,7 @@
         </ion-item>
         @for (review of data.reviews; track review) {
           <ion-item>
-            <p>{{review}}</p>
+            <p data-cy="product-Recensione">{{review}}</p>
           </ion-item>
         } @empty {
           <ion-item>

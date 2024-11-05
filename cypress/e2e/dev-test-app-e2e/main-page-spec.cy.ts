@@ -1,5 +1,6 @@
 import { BASE_URL, STORE_ID } from "src/app/app.constants";
 import { IProductList } from "src/app/models/product-list.model";
+import { IProduct } from "src/app/models/product.model";
 import { IStore } from "src/app/models/store.model";
 
 const fake_store: IStore = {
@@ -57,14 +58,14 @@ const fake_products_list: IProductList = {
 describe('main page test suite', () => {
 
   beforeEach(() => {
-    cy.intercept(`${BASE_URL}/stores/${STORE_ID}`, fake_store).as('storeCall');
+    cy.intercept(`${BASE_URL}/stores/${STORE_ID}`).as('storeCall');
     cy.intercept(`${BASE_URL}/stores/${STORE_ID}/products?page=1&elements=10`, req => {
       delete req.headers['if-none-match'];
 
-      req.reply({
+      /* req.reply({
         body: fake_products_list
-      });
-      
+      }); */
+
     }).as('productCall');
     cy.visit('/');
   });
@@ -79,22 +80,61 @@ describe('main page test suite', () => {
   });
 
   it('intercept store call and verify data visualization', () => {
-    cy.wait('@storeCall').then(() => {
-      cy.dataCy('home-header-toolbar').contains(fake_store.name).should('exist');
+    cy.wait('@storeCall').then(intercepted => {
+
+      const store = intercepted.response?.body ?? null;
+
+      if (!!store?.name)
+        cy.dataCy('home-header-toolbar').contains(store.name).should('exist');
     });
   });
 
   it('intercept product call and verify data visualization', () => {
-    cy.wait('@productCall').then(() => {
+    cy.wait('@productCall').then(intercept => {
+
+      const products: IProduct[] = intercept.response?.body.list;
 
       const titleElements = cy.dataCy('home-content-product-title');
 
-      fake_products_list.list.forEach(element => {
+      products.forEach(element => {
         titleElements.should('include.text', element.data.title);
       });
-      
+
     });
   });
+
+  it('verify product content visualization', () => {
+    cy.wait('@productCall').then(intercept => {
+
+      const products: IProduct[] = intercept.response?.body.list;
+
+      const testProduct = products[0];
+      const accordion = cy.get(`#${testProduct.id}`);
+
+      accordion.click();
+
+      cy.dataCy('product-Descrizione').contains(testProduct.data.description!).should('exist');
+      cy.dataCy('product-Prezzo').contains(testProduct.data.price!).should('exist');
+      cy.dataCy('product-Impiegato').contains(testProduct.data.employee!).should('exist');
+      cy.dataCy('product-Categoria').contains(testProduct.data.category!).should('exist');
+      cy.dataCy('product-Recensione').contains(testProduct.data.reviews[0]!).should('exist');
+
+    });
+  });
+
+  it('verify product creation', () => {
+    cy.get('#open-modal').click();
+
+    cy.get('#ion-overlay-1').should('be.visible');
+
+    cy.get('#ion-input-0').type('NEW TITLE');
+    cy.get('#ion-input-1').type('NEW DESCRIPTION');
+    cy.get('#ion-input-2').type('NEW PRICE');
+    cy.get('#ion-input-3').type('NEW CATEGORY');
+    cy.get('#ion-input-4').type('NEW EMPLOYEE');
+    cy.get('#ion-input-5').type('NEW REVIEW');
+
+  })
 
 
 });

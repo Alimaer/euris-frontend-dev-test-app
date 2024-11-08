@@ -2,7 +2,7 @@
 
   <ion-row>
     <ion-col class="col-cancel-product">
-      <ion-button shape="round" size="small" color="danger" (click)="delete()" [disabled]="!product.id">
+      <ion-button [attr.data-cy]="'delete-' + product.id" shape="round" size="small" color="danger" (click)="delete()" [disabled]="!product.id">
         Elimina prodotto
         <ion-icon name="close"></ion-icon>
       </ion-button>
@@ -11,19 +11,19 @@
 
   <ion-row>
     <ion-col>
-      <app-product-property [label]="'Descrizione'" [value]="data.description"></app-product-property>
+      <app-product-property [label]="'Descrizione'" [prop]="'description'" [value]="data.description"></app-product-property>
     </ion-col>
     <ion-col>
-      <app-product-property [label]="'Prezzo'" [value]="data.price"></app-product-property>
+      <app-product-property [label]="'Prezzo'" [prop]="'price'" [value]="data.price"></app-product-property>
     </ion-col>
   </ion-row>
 
   <ion-row>
     <ion-col>
-      <app-product-property [label]="'Categoria'" [value]="data.category"></app-product-property>
+      <app-product-property [label]="'Categoria'" [prop]="'category'" [value]="data.category"></app-product-property>
     </ion-col>
     <ion-col>
-      <app-product-property [label]="'Impiegato'" [value]="data.employee"></app-product-property>
+      <app-product-property [label]="'Impiegato'" [prop]="'employee'" [value]="data.employee"></app-product-property>
     </ion-col>
   </ion-row>
 
@@ -35,7 +35,7 @@
         </ion-item>
         @for (review of data.reviews; track review) {
           <ion-item>
-            <p data-cy="product-Recensione">{{review}}</p>
+            <p data-cy="product-reviews">{{review}}</p>
           </ion-item>
         } @empty {
           <ion-item>

@@ -1,72 +1,79 @@
 import { BASE_URL, STORE_ID } from "src/app/app.constants";
-import { IProductList } from "src/app/models/product-list.model";
+import { IProductData } from "src/app/models/product-data.model";
 import { IProduct } from "src/app/models/product.model";
-import { IStore } from "src/app/models/store.model";
 
-const fake_store: IStore = {
-  name: 'FAKE STORE',
-  category: 'FAKE CATEGORY',
-  employees: [
-    'FAKE EMPLOYEE'
-  ]
+const properties: (keyof Omit<IProductData, 'reviews'>)[] = [
+  'description',
+  'price',
+  'employee',
+  'category'
+];
+
+const testProduct: IProduct = {
+  id: 'TEST_ID',
+  data: {
+    price: 10,
+    employee: 'TEXT_EMPLOYEE',
+    category: 'TEXT_CATEGORY',
+    title: 'TEST_TITLE',
+    description: 'TEST_DESCRIPTION',
+    reviews: [
+      'TEST_REVIEW',
+      'TEST_ADDITIONAL_REVIEW'
+    ]
+  }
 }
 
-const fake_products_list: IProductList = {
-  list: [
-    {
-      id: 'a',
-      data: {
-        price: 10,
-        employee: 'fake_employee-1',
-        category: 'fake_category_1',
-        title: 'fake_title_1',
-        description: 'fake_description_1',
-        reviews: [
-          'fake_review_1'
-        ]
-      }
-    },
-    {
-      id: 'b',
-      data: {
-        price: 11,
-        employee: 'fake_employee_2',
-        category: 'fake_category_2',
-        title: 'fake_title_2',
-        description: 'fake_description_2',
-        reviews: [
-          'fake_review_2'
-        ]
-      }
-    },
-    {
-      id: 'c',
-      data: {
-        price: 12,
-        employee: 'fake_employee_3',
-        category: 'fake_category_3',
-        title: 'fake_title_3',
-        description: 'fake_description_3',
-        reviews: [
-          'fake_review_3'
-        ]
-      }
+function testProductVisualization(product: IProduct, altProductId: string | null = null) {
+  const productId = altProductId ? altProductId : product.id;
+  const accordion = cy.get(`#${productId}`);
+
+  accordion.click();
+
+  Cypress._.forEach(properties, prop => {
+    const attribute = Cypress._.join(['product', prop], '-');
+    const property = product.data[prop];
+
+    if (property) {
+      cy.dataCy(attribute).contains(property).should('exist');
     }
-  ]
+  });
+
+  Cypress._.forEach(product.data.reviews, review => {
+    cy.dataCy('product-reviews').contains(review).should('exist');
+  });
+}
+
+function testProductCreation(product: IProduct) {
+  cy.get('#open-modal').click();
+
+    cy.get('#ion-overlay-1').should('be.visible');
+
+    cy.dataCy('input-title').click().type(product.data.title!);
+    cy.dataCy('input-description').click().type(product.data.description!);
+    cy.dataCy('input-category').click().type(product.data.category!);
+    cy.dataCy('input-employee').click().type(product.data.employee!);
+    cy.dataCy('input-price').click().type(product.data.price!.toString());
+    cy.dataCy('input-review-0').click().type(product.data.reviews[0]);
+
+    cy.dataCy('add-review').click();
+
+    cy.dataCy('input-review-1').click().type(product.data.reviews[1]);
+
+    cy.dataCy('confirm-create').click();
 }
 
 describe('main page test suite', () => {
 
   beforeEach(() => {
     cy.intercept(`${BASE_URL}/stores/${STORE_ID}`).as('storeCall');
+
     cy.intercept(`${BASE_URL}/stores/${STORE_ID}/products?page=1&elements=10`, req => {
       delete req.headers['if-none-match'];
+    }).as('productListCall');
 
-      /* req.reply({
-        body: fake_products_list
-      }); */
+    cy.intercept('POST', `${BASE_URL}/stores/${STORE_ID}/products`).as('productCall');
 
-    }).as('productCall');
     cy.visit('/');
   });
 
@@ -90,7 +97,7 @@ describe('main page test suite', () => {
   });
 
   it('intercept product call and verify data visualization', () => {
-    cy.wait('@productCall').then(intercept => {
+    cy.wait('@productListCall').then(intercept => {
 
       const products: IProduct[] = intercept.response?.body.list;
 
@@ -104,37 +111,30 @@ describe('main page test suite', () => {
   });
 
   it('verify product content visualization', () => {
-    cy.wait('@productCall').then(intercept => {
-
+    cy.wait('@productListCall').then(intercept => {
       const products: IProduct[] = intercept.response?.body.list;
-
-      const testProduct = products[0];
-      const accordion = cy.get(`#${testProduct.id}`);
-
-      accordion.click();
-
-      cy.dataCy('product-Descrizione').contains(testProduct.data.description!).should('exist');
-      cy.dataCy('product-Prezzo').contains(testProduct.data.price!).should('exist');
-      cy.dataCy('product-Impiegato').contains(testProduct.data.employee!).should('exist');
-      cy.dataCy('product-Categoria').contains(testProduct.data.category!).should('exist');
-      cy.dataCy('product-Recensione').contains(testProduct.data.reviews[0]!).should('exist');
-
+      testProductVisualization(products[0])
     });
   });
 
   it('verify product creation', () => {
-    cy.get('#open-modal').click();
+    testProductCreation(testProduct);
 
-    cy.get('#ion-overlay-1').should('be.visible');
+    cy.wait('@productCall').then(intercept => {
 
-    cy.get('#ion-input-0').type('NEW TITLE');
-    cy.get('#ion-input-1').type('NEW DESCRIPTION');
-    cy.get('#ion-input-2').type('NEW PRICE');
-    cy.get('#ion-input-3').type('NEW CATEGORY');
-    cy.get('#ion-input-4').type('NEW EMPLOYEE');
-    cy.get('#ion-input-5').type('NEW REVIEW');
+      expect(intercept.response).to.exist;
 
-  })
+      cy.get('#ion-overlay-1').should('not.be.visible');
+      cy.dataCy('home-content-product-title').should('include.text', testProduct.data.title!);
 
+      if (intercept.response) {
+        expect(intercept.response.statusCode).to.eq(200);
+        testProductVisualization(testProduct, intercept.response.body);
+
+        cy.dataCy(`delete-${intercept.response.body}`).click();
+        cy.dataCy('home-content-product-title').should('not.include.text', testProduct.data.title!);
+      }
+    });
+  });
 
 });
